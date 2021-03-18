@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { server, rest } from "./mocks/server.js";
 import App from "./App";
 
 describe("Poke Search App", () => {
@@ -9,16 +10,11 @@ describe("Poke Search App", () => {
     expect(heading).toBeInTheDocument();
   });
 
-  test.each([
-    [
-      "pikachu",
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-    ],
-    [
-      "raichu",
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png",
-    ],
-  ])("Can search for %s", async (pokemon, src) => {
+  test.each`
+    pokemon      | src
+    ${"pikachu"} | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"}
+    ${"raichu"}  | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png"}
+  `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {
     render(<App />);
 
     expect(screen.queryByText(`Name: ${pokemon}`)).not.toBeInTheDocument();
@@ -30,5 +26,22 @@ describe("Poke Search App", () => {
 
     const sprite = screen.getByAltText(pokemon + "-sprite");
     expect(sprite).toHaveAttribute("src", src);
+  });
+
+  test("Displays error message when the API fails", async () => {
+    server.use(
+      rest.get(
+        "https://pokeapi.co/api/v2/pokemon/pikachu",
+        async (req, res, ctx) => {
+          return res(ctx.status(500));
+        }
+      )
+    );
+    render(<App />);
+
+    const searchBox = screen.getByLabelText(/Search/i);
+    userEvent.type(searchBox, "pikachu{enter}");
+
+    expect(await screen.findByText(`Oops I'm broken!`)).toBeInTheDocument();
   });
 });

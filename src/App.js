@@ -4,9 +4,9 @@ import { ajax } from "rxjs/ajax";
 import { map } from "rxjs/operators";
 
 const fetchPokemon = (pokemonName) =>
-  fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonName).then((r) =>
-    r.json()
-  );
+  fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonName).then((r) => {
+    return r.json();
+  });
 
 const fetchPokemonAxios = (pokemonName) =>
   axios
@@ -21,11 +21,16 @@ const fetchPokemonRxjs = (pokemonName) =>
 
 function App() {
   const [pokemon, setPokemon] = useState({});
+  const [hasError, setHasError] = useState(false);
 
   const onSubmit = (pokemonName) =>
-    fetchPokemonRxjs(pokemonName).then((data) => {
-      setPokemon(data);
-    });
+    fetchPokemon(pokemonName)
+      .then((data) => {
+        setPokemon(data);
+      })
+      .catch((err) => {
+        setHasError(true);
+      });
 
   return (
     <div className="App">
@@ -45,6 +50,8 @@ function App() {
         src={pokemon.sprites?.front_default}
         alt={pokemon.name + "-sprite"}
       />
+
+      {hasError && <div>{"Oops I'm broken!"}</div>}
     </div>
   );
 }
