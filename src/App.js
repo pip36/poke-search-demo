@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { ajax } from "rxjs/ajax";
 import { map } from "rxjs/operators";
+import { Grid, Typography, TextField } from "@material-ui/core";
 
 const fetchPokemon = (pokemonName) =>
   fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonName).then((r) => {
@@ -38,26 +39,43 @@ function App() {
       });
 
   return (
-    <div className="App">
-      <h1>Poké Search</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit(e.target.elements.name.value);
-        }}
-      >
-        <label htmlFor="search">Search</label>
-        <input id="search" name="name" type="text" />
-      </form>
+    <div className="App" style={{ padding: "2rem", textAlign: "center" }}>
+      <Grid container justify="center">
+        <Typography variant="h2">Poké Search</Typography>
+        <Grid item xs={12}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(e.target.elements.name.value);
+            }}
+          >
+            <TextField
+              fullWidth
+              label="Search"
+              variant="outlined"
+              id="search"
+              name="name"
+              type="text"
+            />
+          </form>
+        </Grid>
+        {pokemon.name && (
+          <>
+            <Grid item xs={12}>
+              <Typography variant="h4">Name: {pokemon.name}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <img
+                src={pokemon.sprites?.front_default}
+                alt={pokemon.name + "-sprite"}
+              />
+            </Grid>
+          </>
+        )}
 
-      <div>Name: {pokemon.name}</div>
-      <img
-        src={pokemon.sprites?.front_default}
-        alt={pokemon.name + "-sprite"}
-      />
-
-      {hasError && <div>{"Oops I'm broken!"}</div>}
-      {notFound && <div>{"'dave' is not a pokemon"}</div>}
+        {hasError && <Typography>{"Oops I'm broken!"}</Typography>}
+        {notFound && <Typography>{"'dave' is not a pokemon"}</Typography>}
+      </Grid>
     </div>
   );
 }
