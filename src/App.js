@@ -1,24 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
-import { ajax } from "rxjs/ajax";
-import { map } from "rxjs/operators";
 import { Grid, Typography, TextField } from "@material-ui/core";
-
-const fetchPokemon = (pokemonName) =>
-  fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonName).then((r) => {
-    return r.json();
-  });
-
-const fetchPokemonAxios = (pokemonName) =>
-  axios
-    .get("https://pokeapi.co/api/v2/pokemon/" + pokemonName)
-    .then((r) => Promise.resolve(r.data));
-
-const fetchPokemonRxjs = (pokemonName) =>
-  ajax
-    .getJSON("https://pokeapi.co/api/v2/pokemon/" + pokemonName)
-    .pipe(map((response) => response))
-    .toPromise();
+import { PokemonSummary } from "./PokemonSummary";
+import { fetchPokemonRxjs, fetchPokemonAxios, fetchPokemon } from "./api";
 
 function App() {
   const [pokemon, setPokemon] = useState({});
@@ -59,19 +42,7 @@ function App() {
             />
           </form>
         </Grid>
-        {pokemon.name && (
-          <>
-            <Grid item xs={12}>
-              <Typography variant="h4">Name: {pokemon.name}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <img
-                src={pokemon.sprites?.front_default}
-                alt={pokemon.name + "-sprite"}
-              />
-            </Grid>
-          </>
-        )}
+        <PokemonSummary pokemon={pokemon} />
 
         {hasError && <Typography>{"Oops I'm broken!"}</Typography>}
         {notFound && <Typography>{"'dave' is not a pokemon"}</Typography>}
