@@ -44,4 +44,15 @@ describe("Poke Search App", () => {
 
     expect(await screen.findByText(`Oops I'm broken!`)).toBeInTheDocument();
   });
+
+  test("Displays not found message when pokemon does not exist", async () => {
+    render(<App />);
+
+    const searchBox = screen.getByLabelText(/Search/i);
+    userEvent.type(searchBox, "dave{enter}");
+
+    expect(
+      await screen.findByText(`'dave' is not a pokemon`)
+    ).toBeInTheDocument();
+  });
 });

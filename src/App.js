@@ -22,14 +22,19 @@ const fetchPokemonRxjs = (pokemonName) =>
 function App() {
   const [pokemon, setPokemon] = useState({});
   const [hasError, setHasError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   const onSubmit = (pokemonName) =>
-    fetchPokemon(pokemonName)
+    fetchPokemonRxjs(pokemonName)
       .then((data) => {
         setPokemon(data);
       })
       .catch((err) => {
-        setHasError(true);
+        if (err.status === 404) {
+          setNotFound(true);
+        } else {
+          setHasError(true);
+        }
       });
 
   return (
@@ -52,6 +57,7 @@ function App() {
       />
 
       {hasError && <div>{"Oops I'm broken!"}</div>}
+      {notFound && <div>{"'dave' is not a pokemon"}</div>}
     </div>
   );
 }
