@@ -1,26 +1,11 @@
 import { useState } from "react";
 import { Grid, Typography, TextField } from "@material-ui/core";
 import { PokemonSummary } from "./PokemonSummary";
-import { fetchPokemonRxjs, fetchPokemonAxios } from "./api";
+import { usePokemon } from "./usePokemon";
 
 function App() {
-  const [pokemon, setPokemon] = useState({});
-  const [error, setError] = useState("");
-
-  const onSubmit = (pokemonName) =>
-    fetchPokemonRxjs(pokemonName)
-      .then((data) => {
-        setPokemon(data);
-      })
-      .catch((err) => {
-        //rxjs err.status
-        //axios err.response?.status
-        if (err.status === 404) {
-          setError("NotFound");
-        } else {
-          setError("Error");
-        }
-      });
+  const [name, setName] = useState("");
+  const { pokemon, error } = usePokemon(name);
 
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>
@@ -30,7 +15,7 @@ function App() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              onSubmit(e.target.elements.name.value);
+              setName(e.target.elements.name.value);
             }}
           >
             <TextField
