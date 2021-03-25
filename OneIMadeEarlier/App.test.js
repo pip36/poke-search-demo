@@ -6,7 +6,7 @@ import App from "./App";
 describe("Poke Search App", () => {
   test("Main heading text is visible", () => {
     render(<App />);
-    const heading = screen.getByRole("heading", { name: /Poké search/i });
+    const heading = screen.getByRole("heading", { name: /Pokemon search/i });
     expect(heading).toBeInTheDocument();
   });
 
@@ -51,8 +51,6 @@ describe("Poke Search App", () => {
     const searchBox = screen.getByLabelText(/Search/i);
     userEvent.type(searchBox, "dave{enter}");
 
-    expect(
-      await screen.findByText(`'dave' is not a pokemon`)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(`Not a pokemon`)).toBeInTheDocument();
   });
 });

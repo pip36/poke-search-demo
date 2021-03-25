@@ -4,15 +4,31 @@ import { server, rest } from "./mocks/server.js";
 import App from "./App";
 
 describe("Poke Search App", () => {
-  test("Main heading text is visible", () => {});
+  test("Main heading text is visible", () => {
+    render(<App />);
+    const heading = screen.getByRole("heading", { name: /Pokemon search/i });
+    expect(heading).toBeInTheDocument();
+  });
 
-  test.skip.each`
+  test.each`
     pokemon      | src
     ${"pikachu"} | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"}
     ${"raichu"}  | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png"}
-  `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {});
+  `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {
+    render(<App />);
 
-  test.skip("Displays error message when the API fails", async () => {
+    expect(screen.queryByText(`Name: ${pokemon}`)).not.toBeInTheDocument();
+
+    const searchBox = screen.getByLabelText(/Search/i);
+    userEvent.type(searchBox, pokemon + "{enter}");
+
+    expect(await screen.findByText(`Name: ${pokemon}`)).toBeInTheDocument();
+
+    const sprite = screen.getByAltText(pokemon + "-sprite");
+    expect(sprite).toHaveAttribute("src", src);
+  });
+
+  test("Displays error message when the API fails", async () => {
     server.use(
       rest.get(
         "https://pokeapi.co/api/v2/pokemon/pikachu",
@@ -21,7 +37,20 @@ describe("Poke Search App", () => {
         }
       )
     );
+    render(<App />);
+
+    const searchBox = screen.getByLabelText(/Search/i);
+    userEvent.type(searchBox, "pikachu{enter}");
+
+    expect(await screen.findByText(`Oops I'm broken!`)).toBeInTheDocument();
   });
 
-  test.skip("Displays not found message when pokemon does not exist", async () => {});
+  test("Displays not found message when pokemon does not exist", async () => {
+    render(<App />);
+
+    const searchBox = screen.getByLabelText(/Search/i);
+    userEvent.type(searchBox, "dave{enter}");
+
+    expect(await screen.findByText(`Not a pokemon`)).toBeInTheDocument();
+  });
 });
