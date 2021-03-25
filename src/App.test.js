@@ -12,9 +12,16 @@ describe("Poke Search App", () => {
     pokemon      | src
     ${"pikachu"} | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"}
     ${"raichu"}  | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png"}
-  `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {});
+  `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {
+    render(<App />);
+    // text
 
-  test.skip("Displays not found message when pokemon does not exist", async () => {});
+    //image
+  });
+
+  test.skip("Displays not found message when pokemon does not exist", async () => {
+    render(<App />);
+  });
 
   test.skip("Displays error message when the API fails", async () => {
     server.use(
@@ -25,5 +32,7 @@ describe("Poke Search App", () => {
         }
       )
     );
+
+    render(<App />);
   });
 });
