@@ -46,9 +46,7 @@ function App() {
         <PokemonSummary pokemon={pokemon} />
 
         {error === "Error" && <Typography>{"Oops I'm broken!"}</Typography>}
-        {error === "NotFound" && (
-          <Typography>{"'dave' is not a pokemon"}</Typography>
-        )}
+        {error === "NotFound" && <Typography>{"Not a pokemon"}</Typography>}
       </Grid>
     </div>
   );
