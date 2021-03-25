@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { PokemonSummary } from "./PokemonSummary";
-import { fetchPokemonRxjs, fetchPokemonAxios, fetchPokemon } from "./api";
+import { fetchPokemonRxjs, fetchPokemonAxios } from "./api";
 
 function App() {
   return <div></div>;

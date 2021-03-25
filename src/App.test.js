@@ -14,9 +14,6 @@ describe("Poke Search App", () => {
     ${"raichu"}  | ${"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png"}
   `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {
     render(<App />);
-    // text
-
-    //image
   });
 
   test.skip("Displays not found message when pokemon does not exist", async () => {

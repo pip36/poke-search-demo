@@ -17,14 +17,10 @@ describe("Poke Search App", () => {
   `("Can search for $pokemon and view sprite", async ({ pokemon, src }) => {
     render(<App />);
 
-    expect(screen.queryByText(`Name: ${pokemon}`)).not.toBeInTheDocument();
-
     const searchBox = screen.getByLabelText(/Search/i);
     userEvent.type(searchBox, pokemon + "{enter}");
 
-    expect(await screen.findByText(`Name: ${pokemon}`)).toBeInTheDocument();
-
-    const sprite = screen.getByAltText(pokemon + "-sprite");
+    const sprite = await screen.findByAltText(pokemon + "-sprite");
     expect(sprite).toHaveAttribute("src", src);
   });
 

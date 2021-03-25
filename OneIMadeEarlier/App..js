@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Grid, Typography, TextField } from "@material-ui/core";
 import { PokemonSummary } from "./PokemonSummary";
-import { fetchPokemonRxjs, fetchPokemonAxios, fetchPokemon } from "./api";
+import { fetchPokemonRxjs, fetchPokemonAxios } from "./api";
 
 function App() {
   const [pokemon, setPokemon] = useState({});
@@ -14,7 +14,7 @@ function App() {
       })
       .catch((err) => {
         //rxjs err.status
-        //axios err.response.status
+        //axios err.response?.status
         if (err.status === 404) {
           setError("NotFound");
         } else {
